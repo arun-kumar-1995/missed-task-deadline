@@ -1,4 +1,4 @@
-import { APIError } from '../shared/errorHandler.shared.js'
+import { APIError } from "../shared/errorHandler.shared.js"
 
 export const errorMiddleware = (error, request, response, next) => {
   let statusCode = error.statusCode || 500
