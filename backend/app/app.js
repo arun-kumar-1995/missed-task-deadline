@@ -1,11 +1,15 @@
+'use strict'
+
 // * GLOBAL Imports
 
 import express from 'express'
 import cors from 'cors'
 import helmet from 'helmet'
 import compression from 'compression'
+import cookieParser from "cookie-parser";
 import appRoute from './routes/index.js'
 import { errorMiddleware } from './middlewares/error.middleware.js'
+import { configSession } from '../configs/session.configs.js'
 
 // * Define app
 const app = express()
@@ -15,8 +19,12 @@ const app = express()
 app.use(helmet())
 app.use(compression())
 app.use(express.json())
+app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }))
 app.set('trust proxy', true)
+
+// *  Implement session storage for redis
+app.use(session(configSession))
 
 // * Use CORS middleware
 app.use(
@@ -32,6 +40,6 @@ app.use(
 app.use('/app', appRoute)
 
 // * error middleware
-app.use(errorMiddleware)
+app.use(errorMiddleware);
 
 export default app

@@ -1,9 +1,15 @@
-import { User } from "../schemas/user.schema.js";
+import { User } from '../schemas/user.schema.js'
 
-export const UserModel = {
+class UserModal {
+  constructor(model) {
+    this.model = model
+  }
 
-    createUser : async (userData) => {
-        const user = new User(userData);
-        return await user.save();
-    }
+  async createUser(userData) {
+    const user = new User(userData)
+    return await user.save();
+  }
+  
 }
+
+export const UserModel = new UserModal(User);
