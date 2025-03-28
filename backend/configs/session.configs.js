@@ -1,4 +1,5 @@
-import { redisClient } from './redis.configs'
+import { redisClient } from './redis.configs.js'
+import { RedisStore } from 'connect-redis'
 
 export const configSession = {
   name: 'session_management',

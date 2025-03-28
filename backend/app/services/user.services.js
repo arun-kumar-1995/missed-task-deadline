@@ -1,7 +1,50 @@
-import { UserModel } from "../models/user.model";
+'use strict'
+
+/**
+ *  import required modules here
+ */
+
+import { HttpStatus } from '../constants/httpStatus.constants.js'
+import { UserModel } from '../models/user.model.js'
+import { APIError } from '../shared/errorHandler.shared.js'
+import { Bcrypt } from './bcrypt.services.js'
+import { Jwt } from './jwt.services.js'
+// * User service methods
 
 export const UserService = {
-    
-    UserModel
+  /**
+   *
+   */
 
+  register: async (body) => {
+    // check for duplicate
+    const duplicate = await UserModel.findOne({ email: body.email })
+    if (duplicate)
+      throw new APIError(
+        HttpStatus.CONFLICT,
+        `This Email : ${body.email} is already registered`
+      )
+
+    // create new user
+    const user = await UserModel.createUser(body)
+    return user
+  },
+
+  login: async (body) => {
+    // validate user credentials
+    const user = await UserModel.findOne({ email: body.email }, '+password')
+    if (!user) throw new APIError(HttpStatus.NOT_FOUND, 'Invalid Email entered')
+
+    // match the password
+    const match = await Bcrypt.comparePassword(body.password, user.password)
+    if (!match)
+      throw new APIError(
+        HttpStatus.UNAUTHORIZED,
+        'Invalid Email or Password entered'
+      )
+
+    // generate token
+    const token = await Jwt.generateToken(user._id)
+    return token
+  },
 }

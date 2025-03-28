@@ -1,4 +1,5 @@
 import { Schema, model } from 'mongoose'
+import { Bcrypt } from '../services/bcrypt.services.js'
 
 const schema = new Schema(
   {
@@ -14,6 +15,7 @@ const schema = new Schema(
     password: {
       type: String,
       required: true,
+      select: false,
     },
     role: {
       type: String,
@@ -29,5 +31,10 @@ const schema = new Schema(
   },
   { timestamps: true }
 )
+
+schema.pre('save', async function (next) {
+  if (!this.isModified('password')) return next()
+  this.password = await Bcrypt.hashPassword(this.password)
+})
 
 export const User = model('User', schema)
