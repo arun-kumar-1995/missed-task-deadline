@@ -13,7 +13,8 @@ export const Jwt = {
     })
 
     // store the token inside redis for authentication
-    redisClient.set('session:user', payload, 'EX', 3600)
+    // await redisClient.set('session:user', payload, 'EX', 3600);
+    // await redisClient.setex(`session:${payload}`, 3600, JSON.stringify(user));
     return token
   },
 }
