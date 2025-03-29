@@ -17,4 +17,8 @@ export const Jwt = {
     // await redisClient.setex(`session:${payload}`, 3600, JSON.stringify(user));
     return token
   },
+
+  verifyToken: async function (token) {
+    return jwt.verify(token, process.env.JWT_SECRET)
+  },
 }
