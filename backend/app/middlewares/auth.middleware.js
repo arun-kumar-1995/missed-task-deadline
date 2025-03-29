@@ -1,6 +1,6 @@
 import { HttpStatus } from '../constants/httpStatus.constants.js'
 import { Jwt } from '../services/jwt.services.js'
-
+import { APIError } from '../shared/errorHandler.shared.js'
 
 export const isAuthenticated = async (request, response, next) => {
   try {

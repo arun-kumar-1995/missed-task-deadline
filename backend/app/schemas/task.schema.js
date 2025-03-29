@@ -14,7 +14,7 @@ const schema = new Schema(
       lowercase: true,
     },
     assignedTo: {
-      type: mongoose.Schema.Types.ObjectId,
+      type: Schema.Types.ObjectId,
       ref: 'User',
       required: true,
     },
@@ -31,6 +31,10 @@ const schema = new Schema(
       type: String,
       enum: ['Low', 'Medium', 'High'],
       default: 'Medium',
+    },
+    deleted: {
+      type: Boolean,
+      default: false,
     },
   },
   { timestamps: true }
