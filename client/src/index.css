@@ -1,4 +1,4 @@
- /* 
+/* 
 this file holds the collected chunks of css files
 */
 
@@ -6,4 +6,3 @@ this file holds the collected chunks of css files
 @import "./styles/variables.css";
 @import "./styles/global.css";
 @import "./styles/utilities.css";
-/* @import "./styles/components.css"; */
