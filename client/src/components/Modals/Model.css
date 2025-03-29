@@ -101,3 +101,57 @@
     opacity: 1;
   }
 }
+
+.delete-modal-container h2 {
+  margin-bottom: 10px;
+  font-size: 20px;
+  text-align: center;
+}
+
+.delete-modal-container p {
+  font-size: 14px;
+  color: #666;
+  text-align: center;
+  margin-bottom: 15px;
+}
+
+.delete-modal-container input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.3s ease-in-out;
+}
+
+.delete-modal-container input:focus {
+  border-color: #007bff;
+}
+
+.btn-group {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 15px;
+}
+
+.btn-group .btn-cancel,
+.btn-group .btn-delete {
+  flex: 1;
+  font-size: 14px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: 0.2s ease-in-out;
+  text-align: center;
+  padding:0.8rem;
+}
+
+.btn-cancel {
+  background: #ccc;
+  color: #333;
+}
+
+.btn-cancel:hover {
+  background: #bbb;
+}

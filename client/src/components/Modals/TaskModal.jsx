@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { MdClose } from "react-icons/md";
 import "./Model.css";
-import { useToast } from "../contexts/ToastContext";
+import { useToast } from "../../contexts/ToastContext";
 const TaskModal = ({ isOpen, onClose }) => {
   const [taskData, setTaskData] = useState({
     title: "",

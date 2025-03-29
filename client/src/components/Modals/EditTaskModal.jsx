@@ -1,5 +1,5 @@
 import { useState } from "react";
-import {MdClose} from "react-icons/md";
+import { MdClose } from "react-icons/md";
 import "./Model.css";
 
 const EditTaskModal = ({ onClose, task }) => {

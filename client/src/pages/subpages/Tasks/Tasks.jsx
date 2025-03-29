@@ -9,12 +9,15 @@ import { FaRegBell } from "react-icons/fa6";
 
 import { Link } from "react-router-dom";
 import { useState } from "react";
-import TaskModal from "../../../components/TaskModal";
-import EditTaskModal from "../../../components/EditTaskModal";
+import TaskModal from "../../../components/Modals/TaskModal";
+import EditTaskModal from "../../../components/Modals/EditTaskModal";
+import DeleteModal from "../../../components/Modals/DeleteModal";
 
 const TaskPage = () => {
   const [isTaskModal, setTaskModal] = useState(false);
   const [isEditModal, setEditModal] = useState(false);
+  const [isDeleteModal, setDeleteModal] = useState(false);
+
   return (
     <div className="page-wrapper">
       <div className="page-header">
@@ -52,7 +55,10 @@ const TaskPage = () => {
                   >
                     <MdOutlineEdit size={20} />
                   </button>
-                  <button className="icon-btn btn-delete">
+                  <button
+                    className="icon-btn btn-delete"
+                    onClick={() => setDeleteModal(true)}
+                  >
                     <GoTrash size={18} />
                   </button>
                 </div>
@@ -102,6 +108,7 @@ const TaskPage = () => {
         </section>
       </div>
 
+      {/*Model stuffs  */}
       {isTaskModal && (
         <TaskModal isOpen={isTaskModal} onClose={() => setTaskModal(false)} />
       )}
@@ -110,6 +117,13 @@ const TaskPage = () => {
         <EditTaskModal
           isOpen={isEditModal}
           onClose={() => setEditModal(false)}
+        />
+      )}
+
+      {isDeleteModal && (
+        <DeleteModal
+          onClose={() => setDeleteModal(false)}
+          data={{ id: "123", title: "Fix UI Bug" }}
         />
       )}
     </div>
