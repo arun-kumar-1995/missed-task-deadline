@@ -1,0 +1,38 @@
+.side-nav {
+  padding: 0.8rem 1.6rem;
+}
+
+.logo h1 {
+  font-weight: 500;
+  letter-spacing: 0.8px;
+  color: var(--clr-dark);
+}
+nav {
+  margin-top: 2em;
+}
+nav li {
+  margin: 1.2em 0;
+}
+
+nav li a {
+  display: inline-flex;
+  width: 100%;
+  padding: 1.2rem;
+  border-radius: 0.8rem;
+  background-color: #eef2fc;
+  transition: all 0.24s ease-in;
+}
+
+nav li a.active {
+  background-color: #2563dc;
+  color: var(--clr-light);
+}
+nav li a:hover {
+  background-color: var(--clr-dark);
+  color: var(--clr-light);
+}
+
+a span {
+  font-size: 1.4rem;
+  margin-left: 0.8em;
+}

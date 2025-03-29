@@ -14,15 +14,15 @@ const Sidebar = () => {
       <nav>
         <ul>
           <li>
-            <Link to="/">
-              <FaTasks className="nav-icon" title="tasks" />
+            <Link to="/" className="active">
+              <FaTasks className="nav-icon" title="tasks" size={20} />
               <span>Tasks</span>
             </Link>
           </li>
           <li>
             <Link to="/notification">
-              <FaRegBell className="nav-icon" title="notification" />
-              <span>Notification</span>
+              <FaRegBell className="nav-icon" title="notification" size={20} />
+              <span>Notification </span>
             </Link>
           </li>
         </ul>
