@@ -1,5 +1,23 @@
+import { lazy, Suspense } from "react";
+import { Routes, Route, Link } from "react-router-dom";
+import Sidebar from "../../components/Sidebar";
+
+// * Lazy load components for better performance
+const TaskPage = lazy(() => import("../components/Tasks"));
+const Notification = lazy(() => import("../components/Notification"));
+
 const Home = () => {
-  return <h1>Home page</h1>;
+  return (
+    <main>
+      <Sidebar />
+      <Suspense fallback={<div>Loading...</div>}>
+        <Routes>
+          <Route path="" element={<TaskPage />} />
+          <Route path="notification" element={<Notification />} />
+        </Routes>
+      </Suspense>
+    </main>
+  );
 };
 
 export default Home;
