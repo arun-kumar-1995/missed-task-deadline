@@ -2,16 +2,23 @@
   padding: 0.8rem 1.6rem;
 }
 
+.logo {
+  padding: 1vh 0 2vh 0;
+}
+
 .logo h1 {
   font-weight: 500;
   letter-spacing: 0.8px;
   color: var(--clr-dark);
 }
+
 nav {
-  margin-top: 2em;
+  height: 90vh;
+  position: relative;
 }
+
 nav li {
-  margin: 1.2em 0;
+  margin-bottom: 1.2em;
 }
 
 nav li a {
@@ -23,10 +30,6 @@ nav li a {
   transition: all 0.24s ease-in;
 }
 
-nav li a.active {
-  background-color: #2563dc;
-  color: var(--clr-light);
-}
 nav li a:hover {
   background-color: var(--clr-dark);
   color: var(--clr-light);
@@ -35,4 +38,17 @@ nav li a:hover {
 a span {
   font-size: 1.4rem;
   margin-left: 0.8em;
+}
+
+nav li a.active {
+  background-color: #2563dc;
+  color: var(--clr-light);
+}
+
+a.logout {
+  margin-top: auto;
+  background-color: #fdf0ec;
+  color: #81290e;
+  position: absolute;
+  bottom: 0;
 }

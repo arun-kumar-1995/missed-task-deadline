@@ -1,0 +1,115 @@
+.page-header {
+  padding: 0.8rem;
+  display: flex;
+  justify-content: space-between;
+  background-color: var(--clr-white);
+  border-bottom: 1px solid #e3e3e3;
+}
+
+.page-header h1 {
+  font-weight: 500;
+  font-size: 2.4rem;
+}
+
+.page-header div {
+  display: inline-flex;
+}
+
+.page-header .btn-notify {
+  border-radius: 50%;
+  background-color: #f9f9f9;
+  padding: 0.8rem;
+  position: relative;
+  margin-right: 2em;
+}
+
+.page-header .btn-notify span {
+  font-size: 1.4rem;
+  position: absolute;
+  top: -0.2em;
+  right: -0.4em;
+  color: var(--clr-danger);
+  font-weight: 500;
+}
+
+.btn-create {
+  background-color: #2563dc;
+  color: var(--clr-light);
+  border-radius: 0.6rem;
+  display: flex;
+  align-items: center;
+  min-width: 8rem;
+  font-size: 1.2rem;
+  padding: 0rem 1.2rem;
+}
+
+.btn-create span {
+  margin-right: 0.8rem;
+}
+
+.task-wrapper {
+  display: flex;
+  flex-wrap: nowrap;
+  flex-direction: row;
+  margin-top: 2em;
+}
+.task-wrapper section {
+  padding: 0.8rem;
+  flex: 1;
+}
+
+.task-container {
+  width: 100%;
+  margin-top: 1.2em;
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+}
+.section-header h3 {
+  font-weight: 500;
+  font-size: 1.4rem;
+  margin-left: 0.8em;
+}
+
+/* task markup */
+
+.task {
+  background-color: var(--clr-white);
+  border: 1px solid #e3e3e3;
+  border-radius: 0.8rem;
+  margin-bottom: 1.2em;
+}
+
+.task-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid #e3e3e3;
+  padding: 0.4rem 0.8rem;
+}
+
+.task-header h3 {
+  flex: 1;
+  font-size: 1.3rem;
+  font-weight: 500;
+  text-transform: capitalize;
+}
+
+.task-controls .icon-btn {
+  padding: 0.8rem 0.4rem;
+}
+
+.task-body {
+  margin-top: 1.2em;
+  font-size: 1.2rem;
+  color: var(--clr-dark);
+  padding: 0.8rem;
+}
+.btn-delete {
+  color: var(--clr-danger);
+}
+.btn-edit {
+  color: var(--clr-dark);
+}

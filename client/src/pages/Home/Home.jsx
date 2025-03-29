@@ -3,8 +3,8 @@ import { Routes, Route, Link } from "react-router-dom";
 import Sidebar from "../../components/Sidebar";
 
 // * Lazy load components for better performance
-const TaskPage = lazy(() => import("../components/Tasks"));
-const Notification = lazy(() => import("../components/Notification"));
+const TaskPage = lazy(() => import("../subpages/Tasks/Tasks"));
+const Notification = lazy(() => import("../subpages/Notification"));
 
 const Home = () => {
   return (
