@@ -8,15 +8,19 @@ import { HttpStatus } from '../constants/httpStatus.constants.js'
 import { UserModel } from '../models/user.model.js'
 import { APIError } from '../shared/errorHandler.shared.js'
 import { Bcrypt } from './bcrypt.services.js'
-import { Jwt } from './jwt.services.js'
+import { Jwt } from './jwt.services.js';
+
+
+
+
 // * User service methods
 
-export const UserService = {
+class Service {
   /**
    *
    */
 
-  register: async (body) => {
+  async register(body) {
     // check for duplicate
     const duplicate = await UserModel.findOne({ email: body.email })
     if (duplicate)
@@ -28,9 +32,9 @@ export const UserService = {
     // create new user
     const user = await UserModel.createUser(body)
     return user
-  },
+  }
 
-  login: async (body) => {
+  async login(body) {
     // validate user credentials
     const user = await UserModel.findOne({ email: body.email }, '+password')
     if (!user) throw new APIError(HttpStatus.NOT_FOUND, 'Invalid Email entered')
@@ -46,5 +50,7 @@ export const UserService = {
     // generate token
     const token = await Jwt.generateToken(user._id)
     return token
-  },
+  }
 }
+
+export const UserService = new Service()
