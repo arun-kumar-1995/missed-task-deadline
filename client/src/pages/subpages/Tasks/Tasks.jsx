@@ -8,7 +8,13 @@ import { GrInProgress } from "react-icons/gr";
 import { FaRegBell } from "react-icons/fa6";
 
 import { Link } from "react-router-dom";
+import { useState } from "react";
+import TaskModal from "../../../components/TaskModal";
+import EditTaskModal from "../../../components/EditTaskModal";
+
 const TaskPage = () => {
+  const [isTaskModal, setTaskModal] = useState(false);
+  const [isEditModal, setEditModal] = useState(false);
   return (
     <div className="page-wrapper">
       <div className="page-header">
@@ -18,7 +24,11 @@ const TaskPage = () => {
             <FaRegBell size={20} />
             <span>02</span>
           </Link>
-          <button type="button" className="btn btn-create">
+          <button
+            type="button"
+            className="btn btn-create"
+            onClick={() => setTaskModal(true)}
+          >
             <span className="text">New task</span>
             <MdAdd size={20} />
           </button>
@@ -29,14 +39,17 @@ const TaskPage = () => {
         <section className="section-todo">
           <div className="section-header">
             <FaTasks size={20} />
-            <h3>To do </h3>
+            <h3>To do (05)</h3>
           </div>
           <div className="task-container">
             <div className="task clr-todo">
               <div className="task-header">
                 <h3>Optimize user controller</h3>
                 <div className="task-controls">
-                  <button className="icon-btn btn-edit">
+                  <button
+                    className="icon-btn btn-edit"
+                    onClick={() => setEditModal(true)}
+                  >
                     <MdOutlineEdit size={20} />
                   </button>
                   <button className="icon-btn btn-delete">
@@ -55,7 +68,10 @@ const TaskPage = () => {
               <div className="task-header">
                 <h3>Optimize user controller</h3>
                 <div className="task-controls">
-                  <button className="icon-btn btn-edit">
+                  <button
+                    className="icon-btn btn-edit"
+                    onClick={() => setEditModal(true)}
+                  >
                     <MdOutlineEdit size={20} />
                   </button>
                   <button className="icon-btn btn-delete">
@@ -75,7 +91,7 @@ const TaskPage = () => {
         <section className="section-inprogress">
           <div className="section-header">
             <GrInProgress size={20} />
-            <h3>In Progress </h3>
+            <h3>In Progress (08)</h3>
           </div>
         </section>
         <section className="section-todo">
@@ -85,6 +101,17 @@ const TaskPage = () => {
           </div>
         </section>
       </div>
+
+      {isTaskModal && (
+        <TaskModal isOpen={isTaskModal} onClose={() => setTaskModal(false)} />
+      )}
+
+      {isEditModal && (
+        <EditTaskModal
+          isOpen={isEditModal}
+          onClose={() => setEditModal(false)}
+        />
+      )}
     </div>
   );
 };
