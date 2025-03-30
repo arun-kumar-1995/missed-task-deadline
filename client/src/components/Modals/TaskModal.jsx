@@ -2,38 +2,46 @@ import { useEffect, useState } from "react";
 import { MdClose } from "react-icons/md";
 import "./Model.css";
 import { useToast } from "../../contexts/ToastContext";
+import { API } from "../../apiWrapper";
+import { getUTCTimestamp } from "../../utils/formatDate.utils";
 const TaskModal = ({ isOpen, onClose }) => {
+  const toast = useToast();
+  const [isLoading, setIsLoading] = useState(false);
   const [taskData, setTaskData] = useState({
     title: "",
     description: "",
-    status: "pending",
-    priority: "low",
+    status: "",
+    priority: "",
     deadline: "",
     assignedTo: [],
   });
 
-  const [user, setUser] = useState({});
-  const toast = useToast();
-  const fetchUsers = async () => {
-    try {
-    } catch (err) {
-      toast.error(err.message);
-    }
-  };
-
-  useEffect(() => {
-    fetchUsers();
-  }, [user]);
+  useEffect(() => {}, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setTaskData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Task Submitted:", taskData);
-    onClose();
+    setIsLoading(true);
+    const inputData = {
+      ...taskData,
+      deadline: getUTCTimestamp(taskData.deadline),
+    };
+
+    try {
+      const response = await API.post(`/task/create`, inputData);
+
+      toast.success(response?.data?.message);
+      setTaskData({});
+      onClose();
+    } catch (err) {
+      toast.error(err?.response?.data?.error?.message);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   if (!isOpen) return null;
@@ -89,6 +97,7 @@ const TaskModal = ({ isOpen, onClose }) => {
                 value={taskData.status}
                 onChange={handleChange}
               >
+                <option value="To-Do">Select status</option>
                 <option value="To-Do">To-Do</option>
                 <option value="In-Progress">In Progress</option>
                 <option value="Completed">Completed</option>
@@ -102,14 +111,15 @@ const TaskModal = ({ isOpen, onClose }) => {
                 value={taskData.priority}
                 onChange={handleChange}
               >
+                <option value="">Select priority</option>
                 <option value="Low">Low</option>
                 <option value="Medium">Medium</option>
                 <option value="High">High</option>
               </select>
             </div>
 
-            <button type="submit" className="submit-btn">
-              Create Task
+            <button type="submit" className="submit-btn" disabled={isLoading}>
+              {isLoading ? "Submitting" : "Create Task"}
             </button>
           </form>
         </div>
