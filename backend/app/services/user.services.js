@@ -8,10 +8,7 @@ import { HttpStatus } from '../constants/httpStatus.constants.js'
 import { UserModel } from '../models/user.model.js'
 import { APIError } from '../shared/errorHandler.shared.js'
 import { Bcrypt } from './bcrypt.services.js'
-import { Jwt } from './jwt.services.js';
-
-
-
+import { Jwt } from './jwt.services.js'
 
 // * User service methods
 
@@ -49,7 +46,7 @@ class Service {
 
     // generate token
     const token = await Jwt.generateToken(user._id)
-    return token
+    return { token, userId: user._id }
   }
 }
 

@@ -161,15 +161,15 @@
   border-radius: 1.2rem;
   font-size: 1.1rem;
 }
-.--priority-low {
+.--priority-Low {
   background-color: #eef2fc;
   color: #2563dc;
 }
-.--priority-medium {
+.--priority-Medium {
   background-color: #f3e1bf;
   color: #ee9e09;
 }
-.--priority-high {
+.--priority-High {
   background-color: #fdf0ec;
   color: #81290e;
 }

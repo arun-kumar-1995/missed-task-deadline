@@ -1,6 +1,7 @@
-import { lazy, Suspense } from "react";
+import { lazy, Suspense, useEffect } from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { ProtectedRoute } from "./ProtectedRoute";
+import WebFont from "webfontloader";
 
 // lazy imports
 const Home = lazy(() => import("./pages/Home/Home"));
@@ -9,6 +10,14 @@ const SignUp = lazy(() => import("./pages/auth/SignUp"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 
 const App = () => {
+  useEffect(() => {
+    WebFont.load({
+      google: {
+        families: ["Nunito:wght@300;400;600;700", "sans-serif"],
+      },
+    });
+  }, []);
+
   return (
     <Suspense fallback={<div>Loading...</div>}>
       <Router>

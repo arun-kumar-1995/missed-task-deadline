@@ -1,7 +1,10 @@
 import express from 'express'
-import { getAllTasks } from '../controllers/user.controllers.js'
+import { getUserProfile, getAllTasks } from '../controllers/user.controllers.js'
 const router = express.Router()
 
-router.route('/get-tasks').post(getAllTasks)
+import { isAuthenticated } from '../middlewares/auth.middleware.js'
+
+router.route('/profile').get(isAuthenticated, getUserProfile)
+router.route('/get-tasks').post(isAuthenticated, getAllTasks)
 
 export default router

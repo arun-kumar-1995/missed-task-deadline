@@ -1,4 +1,4 @@
-import { APIError } from "../shared/errorHandler.shared.js"
+import { APIError } from '../shared/errorHandler.shared.js'
 
 export const errorMiddleware = (error, request, response, next) => {
   let statusCode = error.statusCode || 500
@@ -33,6 +33,11 @@ export const errorMiddleware = (error, request, response, next) => {
     code = error.name
   }
 
+  if (error.name === 'TokenExpiredError') {
+    statusCode = 401
+    errorMessage = 'Token expired. Please log in again.'
+    code = error.name
+  }
   const errorResponse = {
     success: false,
     code,

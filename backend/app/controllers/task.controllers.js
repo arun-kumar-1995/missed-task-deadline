@@ -16,7 +16,8 @@ export const createTask = CatchAsyncError(async (request, response, next) => {
 })
 
 export const getAllTasks = CatchAsyncError(async (request, response, next) => {
-  const tasks = await TaskService.getAllTasks()
+  const { status = 'To-Do' } = request.query
+  const tasks = await TaskService.getAllTasks(status);
   return APIResponse(response, HttpStatus.SUCCESS, 'Here is list of tasks', {
     tasks,
   })
@@ -27,10 +28,10 @@ export const updateTask = CatchAsyncError(async (request, response, next) => {
 
   await TaskService.updateTask(taskId, request.body)
   return APIResponse(response, HttpStatus.SUCCESS, 'Task updated')
-});
+})
 
 export const deleteTask = CatchAsyncError(async (request, response, next) => {
-  const { taskId } = request.params;
-  await TaskService.deleteTask(taskId);
-  return APIResponse(response, HttpStatus.SUCCESS, 'Task deleted');
+  const { taskId } = request.params
+  await TaskService.deleteTask(taskId)
+  return APIResponse(response, HttpStatus.SUCCESS, 'Task deleted')
 })

@@ -33,8 +33,8 @@ class Service {
     await task.save()
   }
 
-  async getAllTasks() {
-    return TaskModel.findAll({ deleted: false })
+  async getAllTasks(status) {
+    return TaskModel.findAll({ deleted: false  , status})
   }
 }
 

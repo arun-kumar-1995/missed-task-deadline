@@ -1,8 +1,10 @@
 import { User } from '../schemas/user.schema.js'
 import { Model } from '../helpers/model.helpers.js'
 
-export class UserModel extends Model {
+class UserModal extends Model {
   constructor() {
     super(User)
   }
 }
+
+export const UserModel = new UserModal(User)

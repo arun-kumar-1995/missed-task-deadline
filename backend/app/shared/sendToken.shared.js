@@ -1,7 +1,7 @@
-export const SendToken = (res, token, message) => {
+export const SendToken = (res, data, message) => {
   return res
     .status(200)
-    .cookie('token', token, {
+    .cookie('token', data.token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       maxAge: 3600000,
@@ -10,6 +10,8 @@ export const SendToken = (res, token, message) => {
     .json({
       success: true,
       message,
-      token,
+      isAuthenticated: true,
+      userId: data.userId,
+      token: data.token,
     })
 }
