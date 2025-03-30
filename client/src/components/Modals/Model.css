@@ -133,6 +133,7 @@
   display: flex;
   justify-content: space-between;
   margin-top: 15px;
+  gap:1.2em
 }
 
 .btn-group .btn-cancel,
@@ -154,4 +155,9 @@
 
 .btn-cancel:hover {
   background: #bbb;
+}
+
+.btn-delete.--active{
+  background-color: var(--clr-danger);
+  color: var(--clr-white)
 }

@@ -1,14 +1,28 @@
 import { useState } from "react";
 import { MdClose } from "react-icons/md";
 import "./Model.css";
+import { API } from "../../apiWrapper";
+import { useToast } from "../../contexts/ToastContext";
 
-const DeleteModal = ({ onClose, data, onDelete }) => {
+const DeleteModal = ({ onClose, task }) => {
   const [inputValue, setInputValue] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const toast = useToast();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    onDelete(data?.id);
-    onClose();
+    setIsLoading(true);
+    try {
+      const response = await API.delete(`/task/delete-task/${task._id}`);
+      console.log(response);
+      toast.success(response?.data?.message);
+      setInputValue("");
+      onClose();
+    } catch (err) {
+      toast.error(err?.response?.data?.error?.message);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -21,7 +35,7 @@ const DeleteModal = ({ onClose, data, onDelete }) => {
         <div className="modal-container delete-modal-container">
           <h2>Delete Task</h2>
           <p>
-            Type <strong>{data?.title}</strong> to confirm deletion:
+            Type <strong>{task?.title}</strong> to confirm deletion:
           </p>
           <form onSubmit={handleSubmit}>
             <input
@@ -30,18 +44,25 @@ const DeleteModal = ({ onClose, data, onDelete }) => {
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
               required
+              autoComplete="on"
             />
 
             <div className="btn-group">
-              <button className="btn btn-cancel" onClick={onClose}>
+              <button
+                className="btn btn-cancel"
+                type="button"
+                onClick={onClose}
+              >
                 Cancel
               </button>
               <button
-                className="btn btn-delete"
+                className={`btn btn-delete${
+                  inputValue === task?.title ? " --active" : ""
+                }`}
                 type="submit"
-                disabled={inputValue !== data?.title}
+                disabled={inputValue !== task?.title}
               >
-                Delete
+                {isLoading ? "Processing..." : "Delete"}
               </button>
             </div>
           </form>
