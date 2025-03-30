@@ -4,7 +4,7 @@ import Sidebar from "../../components/Sidebar/Sidebar";
 
 // * Lazy load components for better performance
 const TaskPage = lazy(() => import("../subpages/Tasks/Tasks"));
-const Notification = lazy(() => import("../subpages/Notification"));
+const Notification = lazy(() => import("../subpages/Notification/Notification"));
 
 const Home = () => {
   return (

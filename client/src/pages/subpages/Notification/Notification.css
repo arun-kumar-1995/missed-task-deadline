@@ -1,0 +1,76 @@
+.page-header {
+  padding: 0.8rem;
+  display: flex;
+  justify-content: space-between;
+  background-color: var(--clr-white);
+  border-bottom: 1px solid #e3e3e3;
+}
+
+.page-header h1 {
+  font-weight: 500;
+  font-size: 2.4rem;
+}
+
+.notification-container {
+  margin-top: 2em;
+  display: flex;
+  flex-direction: column;
+}
+.notification-container .notification {
+  display: flex;
+  align-items: center;
+  gap: 2em;
+  background-color: var(--clr-white);
+  padding: 0.8rem;
+  width: 100%;
+  border-bottom: 1px solid #e3e3e3;
+  font-size: 1.2rem;
+}
+
+.checked-box {
+  display: inline-block;
+  width: 2.4rem;
+  height: 2.4rem;
+  border: 1px solid #e3e3e3;
+  border-radius: 0.4rem;
+  cursor: pointer;
+}
+
+.checked-box:hover {
+  background-color: #eef2fc;
+  padding: 0.8rem;
+}
+
+.task-assigned-users {
+  position: relative;
+  display: flex;
+}
+.task-assigned-users .user-img {
+  width: 3rem;
+  border-radius: 50%;
+  border: 2px solid #fff;
+  object-fit: cover;
+  position: relative;
+  margin-left: -12px;
+}
+.task-assigned-user .user-img:first-child {
+  margin-left: 0;
+}
+
+.notification-container .notification h3 {
+  font-weight: 500;
+  color: var(--clr-dark);
+}
+.notification-container .notification span {
+  flex: 1;
+  color: #444;
+}
+
+.notification .btn-delete {
+  display: inline-block;
+  padding: 0.4rem 0.8rem;
+}
+
+.notification .btn-delete:hover {
+  color: var(--clr-danger);
+}

@@ -119,26 +119,99 @@ const TaskPage = () => {
         </div>
         <div className="task-card">
           <div className="task-header">
-            <h3>Optimize user controller</h3>
-            <div className="task-controls">
-              <button
-                className="icon-btn btn-edit"
-                onClick={() => setEditModal(true)}
-              >
-                <MdOutlineEdit size={20} />
-              </button>
-              <button className="icon-btn btn-delete">
-                <GoTrash size={18} />
+            <h3>Design Branding</h3>
+            <button
+              type="button"
+              className="btn-task-control"
+              onClick={() => setTaskControl(true)}
+            >
+              <MdOutlineMoreHoriz size={20} />
+            </button>
+          </div>
+          <div className="task-card-body">
+            <span className="task-deadline">16 Oct</span>
+            <p>go through all the controllers of branding</p>
+            <div className="card-info">
+              <div className="task-card-user">
+                <img src={userIcon} alt="User Icon" className="user-profile" />
+                <img src={userIcon} alt="User Icon" className="user-profile" />
+                <img src={userIcon} alt="User Icon" className="user-profile" />
+              </div>
+              <button className="task-card-priority --priority-medium">
+                Medium
               </button>
             </div>
           </div>
-          <div className="task-body">
-            <p>
-              Lorem ipsum dolor sit amet, consectetur adipisci elit, sed eiusmod
-              tempor incidunt ut labore et dolore magna aliqua.
-            </p>
-          </div>
+
+          {isTaskControl && (
+            <div className="task-controls">
+              <div className="control" onClick={() => setEditModal(true)}>
+                <button className="icon-btn btn-edit">
+                  <MdOutlineEdit size={20} />
+                </button>
+                <span>Edit</span>
+              </div>
+
+              <div
+                className="control delete-task-control"
+                onClick={() => setDeleteModal(true)}
+              >
+                <button className="icon-btn btn-delete">
+                  <GoTrash size={18} />
+                </button>
+                <span>Delete</span>
+              </div>
+            </div>
+          )}
         </div>
+        <div className="task-card">
+          <div className="task-header">
+            <h3>Design Branding</h3>
+            <button
+              type="button"
+              className="btn-task-control"
+              onClick={() => setTaskControl(true)}
+            >
+              <MdOutlineMoreHoriz size={20} />
+            </button>
+          </div>
+          <div className="task-card-body">
+            <span className="task-deadline">16 Oct</span>
+            <p>go through all the controllers of branding</p>
+            <div className="card-info">
+              <div className="task-card-user">
+                <img src={userIcon} alt="User Icon" className="user-profile" />
+                <img src={userIcon} alt="User Icon" className="user-profile" />
+                <img src={userIcon} alt="User Icon" className="user-profile" />
+              </div>
+              <button className="task-card-priority --priority-medium">
+                Medium
+              </button>
+            </div>
+          </div>
+
+          {isTaskControl && (
+            <div className="task-controls">
+              <div className="control" onClick={() => setEditModal(true)}>
+                <button className="icon-btn btn-edit">
+                  <MdOutlineEdit size={20} />
+                </button>
+                <span>Edit</span>
+              </div>
+
+              <div
+                className="control delete-task-control"
+                onClick={() => setDeleteModal(true)}
+              >
+                <button className="icon-btn btn-delete">
+                  <GoTrash size={18} />
+                </button>
+                <span>Delete</span>
+              </div>
+            </div>
+          )}
+        </div>
+     
       </div>
       {/*Model stuffs  */}
       {isTaskModal && <TaskModal isOpen={isTaskModal} onClose={handleClose} />}

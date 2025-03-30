@@ -24,15 +24,14 @@ nav li {
 nav li a {
   display: inline-flex;
   width: 100%;
-  padding: 1.2rem;
+  padding: 1rem;
   border-radius: 0.8rem;
-  background-color: #eef2fc;
+  background-color: #f9f9f9;
   transition: all 0.24s ease-in;
 }
 
 nav li a:hover {
-  background-color: var(--clr-dark);
-  color: var(--clr-light);
+  background-color: #eef2fc;
 }
 
 a span {
@@ -41,7 +40,7 @@ a span {
 }
 
 nav li a.active {
-  background-color: #2563dc;
+  background-color: #25b1dc;
   color: var(--clr-light);
 }
 

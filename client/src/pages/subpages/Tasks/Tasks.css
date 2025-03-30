@@ -3,7 +3,7 @@
   display: flex;
   justify-content: space-between;
   background-color: var(--clr-white);
-  border-bottom: 1px solid #e3e3e3;
+  /* border-bottom: 1px solid #e3e3e3; */
 }
 
 .page-header h1 {
@@ -51,22 +51,28 @@
   display: flex;
   flex-wrap: nowrap;
   flex-direction: row;
+  background-color: var(--clr-white);
+  border-bottom: 1px solid #e3e3e3;
 }
 .task-sections section {
   padding: 1rem 1.2rem;
   flex: 1;
-  border-bottom: 1px solid #e3e3e3;
-  border-right: 1px solid #e3e3e3;
   cursor: pointer;
 }
 
 .task-sections section:hover {
-  background-color: #7188b6;
-  color: var(--clr-white);
+  background-color: #eef2fc;
 }
 
 .task-sections section.--active {
-  border-bottom: 2px solid var(--clr-success);
+  border-bottom: 3px solid var(--clr-primary);
+}
+
+.task-sections section.--active h3 {
+  color: #2563dc;
+}
+.task-sections section.--active svg {
+  color: #2563dc;
 }
 
 .section-header {
@@ -82,7 +88,7 @@
 /* task markup */
 .task-container {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
   margin-top: 2.4em;
   gap: 1.6em;
 }
