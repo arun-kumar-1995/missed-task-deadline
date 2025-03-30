@@ -34,7 +34,13 @@ class Service {
   }
 
   async getAllTasks(status) {
-    return TaskModel.findAll({ deleted: false  , status})
+    return TaskModel.findAll(
+      { deleted: false, status },
+      {
+        path: 'assignedTo',
+        select: '_id',
+      }
+    )
   }
 }
 

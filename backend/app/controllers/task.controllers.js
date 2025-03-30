@@ -8,7 +8,7 @@ export const createTask = CatchAsyncError(async (request, response, next) => {
   const { title, description, assignedTo, status, deadline, priority } =
     request.body
 
-  validate(request.body, { title, assignedTo, deadline })
+  validate(request.body, { title, assignedTo, deadline });
 
   const task = await TaskService.createNewTask(request.body)
 

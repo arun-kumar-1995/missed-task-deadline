@@ -8,7 +8,7 @@ import { GrInProgress } from "react-icons/gr";
 import { FaRegBell } from "react-icons/fa6";
 
 import { Link } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import TaskModal from "../../../components/Modals/TaskModal";
 import EditTaskModal from "../../../components/Modals/EditTaskModal";
 import DeleteModal from "../../../components/Modals/DeleteModal";
@@ -16,19 +16,17 @@ import userIcon from "../../../assets/dummyUserIcon.png";
 import { MdOutlineMoreHoriz } from "react-icons/md";
 import { API } from "../../../apiWrapper";
 import { useToast } from "../../../contexts/ToastContext";
-import {
-  formatDate,
-  getCurrentUTCTimestamp,
-} from "../../../utils/formatDate.utils";
+import { formatDate, getUTCTimestamp } from "../../../utils/formatDate.utils";
 
 const TaskPage = () => {
   const [isTaskModal, setTaskModal] = useState(false);
   const [isEditModal, setEditModal] = useState(false);
   const [isDeleteModal, setDeleteModal] = useState(false);
-  const [isTaskControl, setTaskControl] = useState(false);
   const [status, setStatus] = useState("To-Do");
-  const [isLoading, setIsloading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [tasks, setTasks] = useState([]);
+  const [selectedTask, setSelectedTask] = useState(null);
+  const [taskControlId, setTaskControlId] = useState(null);
 
   const toast = useToast();
 
@@ -36,25 +34,55 @@ const TaskPage = () => {
     setTaskModal(false);
     setEditModal(false);
     setDeleteModal(false);
-    setTaskControl(false);
+    setTaskControlId(null);
   };
 
-  const getTasks = async () => {
-    setIsloading(true);
+  const handleSelectedTask = (task) => {
+    setEditModal(true);
+    setSelectedTask(task);
+  };
+
+  const handleDeleteTask = (task) => {
+    setDeleteModal(true);
+    setSelectedTask(task);
+  };
+
+  const fetchTasks = useCallback(async () => {
+    setIsLoading(true);
     try {
       const response = await API.get(`/task/get-tasks?status=${status}`);
-      setTasks(response?.data?.data.tasks);
+      setTasks(response?.data?.data.tasks || []);
     } catch (err) {
       toast.error(err?.response?.data?.error?.message);
     } finally {
-      setIsloading(false);
+      setIsLoading(false);
     }
-  };
-  useEffect(() => {
-    getTasks();
   }, [status]);
+
+  useEffect(() => {
+    fetchTasks();
+  }, [fetchTasks]);
+
   console.log(tasks);
-  console.log(getCurrentUTCTimestamp());
+  console.log(getUTCTimestamp("2025-03-31"));
+
+  const TaskControls = ({ onEdit, onDelete }) => (
+    <div className="task-controls">
+      <div className="control" onClick={onEdit}>
+        <button className="icon-btn btn-edit">
+          <MdOutlineEdit size={20} />
+        </button>
+        <span>Edit</span>
+      </div>
+      <div className="control delete-task-control" onClick={onDelete}>
+        <button className="icon-btn btn-delete">
+          <GoTrash size={18} />
+        </button>
+        <span>Delete</span>
+      </div>
+    </div>
+  );
+
   return (
     <div className="page-wrapper">
       <div className="page-header">
@@ -114,7 +142,6 @@ const TaskPage = () => {
           {tasks && tasks.length > 0 ? (
             tasks.map((task) => {
               const deadline = formatDate(task.deadline);
-
               return (
                 <div className="task-card" key={task._id}>
                   <div className="task-header">
@@ -122,7 +149,11 @@ const TaskPage = () => {
                     <button
                       type="button"
                       className="btn-task-control"
-                      onClick={() => setTaskControl(true)}
+                      onClick={() =>
+                        setTaskControlId(
+                          taskControlId === task._id ? null : task._id
+                        )
+                      }
                     >
                       <MdOutlineMoreHoriz size={20} />
                     </button>
@@ -132,21 +163,14 @@ const TaskPage = () => {
                     <p>{task.description}</p>
                     <div className="card-info">
                       <div className="task-card-user">
-                        <img
-                          src={userIcon}
-                          alt="User Icon"
-                          className="user-profile"
-                        />
-                        <img
-                          src={userIcon}
-                          alt="User Icon"
-                          className="user-profile"
-                        />
-                        <img
-                          src={userIcon}
-                          alt="User Icon"
-                          className="user-profile"
-                        />
+                        {task.assignedTo.map((user) => (
+                          <img
+                            src={userIcon}
+                            alt="User Icon"
+                            className="user-profile"
+                            key={user._id}
+                          />
+                        ))}
                       </div>
                       <button
                         className={`task-card-priority --priority-${task.priority}`}
@@ -156,28 +180,11 @@ const TaskPage = () => {
                     </div>
                   </div>
 
-                  {isTaskControl && (
-                    <div className="task-controls">
-                      <div
-                        className="control"
-                        onClick={() => setEditModal(true)}
-                      >
-                        <button className="icon-btn btn-edit">
-                          <MdOutlineEdit size={20} />
-                        </button>
-                        <span>Edit</span>
-                      </div>
-
-                      <div
-                        className="control delete-task-control"
-                        onClick={() => setDeleteModal(true)}
-                      >
-                        <button className="icon-btn btn-delete">
-                          <GoTrash size={18} />
-                        </button>
-                        <span>Delete</span>
-                      </div>
-                    </div>
+                  {taskControlId === task._id && (
+                    <TaskControls
+                      onEdit={() => handleSelectedTask(task)}
+                      onDelete={() => handleDeleteTask(task)}
+                    />
                   )}
                 </div>
               );
@@ -190,16 +197,11 @@ const TaskPage = () => {
 
       {/*Model stuffs  */}
       {isTaskModal && <TaskModal isOpen={isTaskModal} onClose={handleClose} />}
-
       {isEditModal && (
-        <EditTaskModal isOpen={isEditModal} onClose={handleClose} />
+        <EditTaskModal onClose={handleClose} task={selectedTask} />
       )}
-
       {isDeleteModal && (
-        <DeleteModal
-          onClose={handleClose}
-          data={{ id: "123", title: "Fix UI Bug" }}
-        />
+        <DeleteModal onClose={handleClose} task={selectedTask} />
       )}
     </div>
   );

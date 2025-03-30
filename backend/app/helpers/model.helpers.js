@@ -14,8 +14,9 @@ export class Model {
     return await this.model.create(userData)
   }
 
-  async findAll(query = {}, select) {
-    return await this.model.find(query).select(select).lean()
+  async findAll(query = {}, populate, select) {
+    return await this.model.find(query).select(select).populate(populate).lean()
+    lean()
   }
 
   async updateById(id, updateData) {

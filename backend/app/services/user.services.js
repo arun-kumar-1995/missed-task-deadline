@@ -27,7 +27,7 @@ class Service {
       )
 
     // create new user
-    const user = await UserModel.createUser(body)
+    const user = await UserModel.create(body)
     return user
   }
 

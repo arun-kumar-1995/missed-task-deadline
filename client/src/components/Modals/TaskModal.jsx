@@ -9,7 +9,7 @@ const TaskModal = ({ isOpen, onClose }) => {
     status: "pending",
     priority: "low",
     deadline: "",
-    assignedTo: "",
+    assignedTo: [],
   });
 
   const [user, setUser] = useState({});

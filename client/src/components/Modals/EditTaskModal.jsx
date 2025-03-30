@@ -1,25 +1,50 @@
 import { useState } from "react";
 import { MdClose } from "react-icons/md";
 import "./Model.css";
+import { getUTCTimestamp } from "../../utils/formatDate.utils";
+import { API } from "../../apiWrapper";
+import { useToast } from "../../contexts/ToastContext";
 
 const EditTaskModal = ({ onClose, task }) => {
+  const toast = useToast();
+  const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
     title: task?.title || "",
     description: task?.description || "",
     status: task?.status || "pending",
     priority: task?.priority || "medium",
-    deadline: task?.deadline || "",
-    assignedTo: task?.assignedTo || "",
+    deadline: task?.deadline
+      ? new Date(task.deadline).toISOString().slice(0, 10)
+      : "",
   });
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // onSave(formData);
-    onClose();
+    // setIsLoading(true);
+    const inputData = {
+      ...formData,
+      deadline: getUTCTimestamp(formData.deadline),
+    };
+
+    console.log(inputData);
+    try {
+      const response = await API.put(
+        `/task/update-task/${task._id}`,
+        inputData
+      );
+      console.log(response);
+      toast.success(response?.data?.message);
+      setFormData({});
+      onClose();
+    } catch (err) {
+      toast.error(err?.response?.data?.error?.message);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -79,9 +104,9 @@ const EditTaskModal = ({ onClose, task }) => {
                 value={formData.priority}
                 onChange={handleChange}
               >
-                <option value="low">Low</option>
-                <option value="medium">Medium</option>
-                <option value="high">High</option>
+                <option value="Low">Low</option>
+                <option value="Medium">Medium</option>
+                <option value="High">High</option>
               </select>
             </div>
 
@@ -98,8 +123,8 @@ const EditTaskModal = ({ onClose, task }) => {
             </div>
 
             {/* Submit Button */}
-            <button type="submit" className="submit-btn">
-              Save Changes
+            <button type="submit" className="submit-btn" disabled={isLoading}>
+              {isLoading ? "Submitting..." : "Save Changes"}
             </button>
           </form>
         </div>
