@@ -97,7 +97,7 @@ const TaskModal = ({ isOpen, onClose }) => {
                 value={taskData.status}
                 onChange={handleChange}
               >
-                <option value="To-Do">Select status</option>
+                <option value="">Select status</option>
                 <option value="To-Do">To-Do</option>
                 <option value="In-Progress">In Progress</option>
                 <option value="Completed">Completed</option>

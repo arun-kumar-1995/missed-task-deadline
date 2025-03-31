@@ -1,6 +1,8 @@
 import { HttpStatus } from '../constants/httpStatus.constants.js'
 import { TaskModel } from '../models/task.model.js'
 import { APIError } from '../shared/errorHandler.shared.js'
+import { Task } from '../schemas/task.schema.js'
+
 class Service {
   async createNewTask(body) {
     // check if this task is already created
@@ -34,13 +36,27 @@ class Service {
   }
 
   async getAllTasks(status) {
-    return TaskModel.findAll(
-      { deleted: false, status },
+    return await Task.aggregate([
       {
-        path: 'assignedTo',
-        select: '_id',
-      }
-    )
+        $match: { deleted: false },
+      },
+      {
+        $sort: { createdAt: -1 },
+      },
+      {
+        $group: {
+          _id: '$status',
+          tasks: { $push: '$$ROOT' },
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          status: '$_id',
+          tasks: 1,
+        },
+      },
+    ])
   }
 }
 

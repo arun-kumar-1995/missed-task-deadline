@@ -28,7 +28,6 @@ export const isAuthenticated = async (request, response, next) => {
       errorResponse.message = 'Invalid token found'
       return response.status(403).json({ error: errorResponse })
     }
-
     request.userId = user._id
     next()
   } catch (err) {

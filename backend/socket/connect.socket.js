@@ -1,6 +1,6 @@
 import { Server } from 'socket.io'
 import { logger as log } from '../app/helpers/logger.helpers.js'
-
+import { socketManager } from './socketManager.socket.js'
 export const initSocket = (server) => {
   const io = new Server(server, {
     cors: {
@@ -11,17 +11,23 @@ export const initSocket = (server) => {
   })
 
   io.on('connection', (socket) => {
-    log.info(`New client connected: ${socket.id}`)
+    log.info(`Client connected: ${socket.id}`)
 
-    socket.on('message', (data) => {
-      log.info(`Message received: ${data}`)
-      io.emit('message', data)
-    })
+    // call socket mager ti handle socket connection at one place
+    socketManager(io, socket);
+
+    // socket.on('message', (data) => {
+    //   log.info(`Message received: ${data}`)
+    //   io.emit('message', data)
+    // })
 
     socket.on('disconnect', () => {
       log.info(`Client disconnected: ${socket.id}`)
     })
   })
+
+  // attach io to global instance
+  global._io = io;
 
   return io
 }

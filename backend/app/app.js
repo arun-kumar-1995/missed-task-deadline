@@ -7,7 +7,7 @@ import cors from 'cors'
 import helmet from 'helmet'
 import compression from 'compression'
 import cookieParser from 'cookie-parser'
-import session from "express-session";
+import session from 'express-session'
 import appRoute from './routes/index.js'
 import { errorMiddleware } from './middlewares/error.middleware.js'
 import { configSession } from '../configs/session.configs.js'
@@ -36,6 +36,11 @@ app.use(
     allowedHeaders: ['Content-Type', 'Authorization'],
   })
 )
+// * Adding io instance to each request
+app.use((req, res, next) => {
+  req.io = global._io
+  next()
+})
 
 // * Route
 app.use('/app', appRoute)

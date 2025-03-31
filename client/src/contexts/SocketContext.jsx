@@ -17,9 +17,9 @@ export const SocketProvider = ({ children }) => {
 
     // perform cleanup
     return () => {
-      Io.off("connect", handleConnect);
-      Io.off("disconnect", handleDisconnect);
-      Io.disconnect();
+      //   Io.off("connect", handleConnect);
+      //   Io.off("disconnect", handleDisconnect);
+      //   Io.disconnect();
     };
   }, []);
   return (

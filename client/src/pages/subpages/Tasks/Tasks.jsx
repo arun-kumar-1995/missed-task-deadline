@@ -23,9 +23,14 @@ const TaskPage = () => {
   const [isTaskModal, setTaskModal] = useState(false);
   const [isEditModal, setEditModal] = useState(false);
   const [isDeleteModal, setDeleteModal] = useState(false);
-  const [status, setStatus] = useState("To-Do");
+  const [status, setStatus] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [tasks, setTasks] = useState([]);
+  const [tasks, setTasks] = useState({
+    "To-Do": [],
+    "In-Progress": [],
+    Completed: [],
+  });
+  const [newTasksCount, setNewTasksCount] = useState({});
   const [selectedTask, setSelectedTask] = useState(null);
   const [taskControlId, setTaskControlId] = useState(null);
   const { socket, isConnected } = useSocket();
@@ -36,7 +41,6 @@ const TaskPage = () => {
     setEditModal(false);
     setDeleteModal(false);
     setTaskControlId(null);
-    fetchTasks();
   };
 
   const handleSelectedTask = (task) => {
@@ -50,22 +54,65 @@ const TaskPage = () => {
   };
 
   const fetchTasks = useCallback(async () => {
+    setStatus("To-Do");
     setIsLoading(true);
     try {
-      const response = await API.get(`/task/get-tasks?status=${status}`);
-      setTasks(response?.data?.data.tasks || []);
+      const response = await API.get(`/task/get-tasks`);
+      const allTasks = response?.data?.data?.tasks || [];
+
+      // Categorize tasks based on status
+      const categorizedTasks = {
+        "To-Do": [],
+        "In-Progress": [],
+        Completed: [],
+      };
+
+      allTasks.forEach((group) => {
+        if (categorizedTasks[group.status]) {
+          categorizedTasks[group.status] = group.tasks;
+        }
+      });
+
+      setTasks(categorizedTasks);
     } catch (err) {
       toast.error(err?.response?.data?.error?.message);
     } finally {
       setIsLoading(false);
     }
-  }, [status]);
+  }, []);
 
   useEffect(() => {
-    fetchTasks();
-  }, [fetchTasks]);
+    // get the tasks on first mount
 
-  console.log(isConnected);
+    fetchTasks();
+    // update the task dynamically using the event emitted
+    socket.on("task_created", (data) => {
+      setTasks((prevTasks) => {
+        return {
+          ...prevTasks,
+          [data.task.status]: [data.task, ...prevTasks[data.task.status]],
+        };
+      });
+
+      //add new task count
+      setNewTasksCount((prevCounts) => ({
+        ...prevCounts,
+        [data.task.status]: (prevCounts[data.task.status] || 0) + 1,
+      }));
+    });
+
+    socket.on("update_unread_counts", (data) => {
+      console.log("Unread count------", data);
+
+      setNewTasksCount((prevCounts) => ({
+        ...prevCounts,
+        ...data,
+      }));
+    });
+
+    return () => {};
+  }, []);
+
   const TaskControls = ({ onEdit, onDelete }) => (
     <div className="task-controls">
       <div className="control" onClick={onEdit}>
@@ -82,6 +129,14 @@ const TaskPage = () => {
       </div>
     </div>
   );
+
+  const handleSectionClick = async (status) => {
+    setStatus(status);
+    const userId = JSON.parse(localStorage.getItem("user")).replace(/"/g, "");
+    await API.post(`/task/reset-unread`, { status, userId });
+  };
+
+  console.log(tasks);
 
   return (
     <div className="page-wrapper">
@@ -106,30 +161,43 @@ const TaskPage = () => {
       <div className="task-sections">
         <section
           className="section-todo --active"
-          onClick={() => setStatus("To-Do")}
+          onClick={() => handleSectionClick("To-Do")}
         >
           <div className="section-header">
             <FaTasks size={18} />
-            <h3>To do ({tasks.length})</h3>
+            <h3>To do ({tasks["To-Do"].length})</h3>
+            {newTasksCount["To-Do"] && newTasksCount["To-Do"] > 0 && (
+              <button className="new-task">{newTasksCount["To-Do"]} new</button>
+            )}
           </div>
         </section>
         <section
           className="section-inprogress"
-          onClick={() => setStatus("In-Progress")}
+          onClick={() => handleSectionClick("In-Progress")}
         >
           <div className="section-header">
             <GrInProgress size={18} />
-            <h3>In Progress (08)</h3>
+            <h3>In Progress ({tasks["In-Progress"].length})</h3>
+            {newTasksCount["In-Progress"] &&
+              newTasksCount["In-Progress"] > 0 && (
+                <button className="new-task">
+                  {newTasksCount["In-Progress"]} new
+                </button>
+              )}
           </div>
         </section>
         <section
           className="section-todo"
-          onClick={() => setStatus("Completed")}
+          onClick={() => handleSectionClick("Completed")}
         >
           <div className="section-header">
             <MdFileDownloadDone size={20} />
-            <h3>Done </h3>
-            <button className="new-task">8 new</button>
+            <h3>Done ({tasks["Completed"].length}) </h3>
+            {newTasksCount["Completed"] && newTasksCount["Completed"] > 0 && (
+              <button className="new-task">
+                {newTasksCount["Completed"]} new
+              </button>
+            )}
           </div>
         </section>
       </div>
@@ -140,8 +208,8 @@ const TaskPage = () => {
         <div>Loading...</div>
       ) : (
         <div className="task-container">
-          {tasks && tasks.length > 0 ? (
-            tasks.map((task) => {
+          {tasks[status] && tasks[status].length > 0 ? (
+            tasks[status].map((task) => {
               const deadline = formatDate(task.deadline);
               return (
                 <div className="task-card" key={task._id}>
