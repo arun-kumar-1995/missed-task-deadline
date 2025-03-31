@@ -216,6 +216,15 @@
   color: var(--clr-dark);
 }
 
+button.new-task {
+  background-color: #25b1dc;
+  padding: 0.4rem 0.8rem;
+  color: var(--clr-white);
+  font-size: 1.2rem;
+  border-radius: 0.8rem;
+  margin-left: 1em;
+}
+
 /* Fade-in Animation */
 @keyframes fadeIn {
   from {

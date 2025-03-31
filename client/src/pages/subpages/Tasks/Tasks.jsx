@@ -16,7 +16,8 @@ import userIcon from "../../../assets/dummyUserIcon.png";
 import { MdOutlineMoreHoriz } from "react-icons/md";
 import { API } from "../../../apiWrapper";
 import { useToast } from "../../../contexts/ToastContext";
-import { formatDate, getUTCTimestamp } from "../../../utils/formatDate.utils";
+import { formatDate } from "../../../utils/formatDate.utils";
+import { useSocket } from "../../../contexts/SocketContext";
 
 const TaskPage = () => {
   const [isTaskModal, setTaskModal] = useState(false);
@@ -27,7 +28,7 @@ const TaskPage = () => {
   const [tasks, setTasks] = useState([]);
   const [selectedTask, setSelectedTask] = useState(null);
   const [taskControlId, setTaskControlId] = useState(null);
-
+  const { socket, isConnected } = useSocket();
   const toast = useToast();
 
   const handleClose = () => {
@@ -35,6 +36,7 @@ const TaskPage = () => {
     setEditModal(false);
     setDeleteModal(false);
     setTaskControlId(null);
+    fetchTasks();
   };
 
   const handleSelectedTask = (task) => {
@@ -63,9 +65,7 @@ const TaskPage = () => {
     fetchTasks();
   }, [fetchTasks]);
 
-  console.log(tasks);
-  console.log(getUTCTimestamp("2025-03-31"));
-
+  console.log(isConnected);
   const TaskControls = ({ onEdit, onDelete }) => (
     <div className="task-controls">
       <div className="control" onClick={onEdit}>
@@ -110,7 +110,7 @@ const TaskPage = () => {
         >
           <div className="section-header">
             <FaTasks size={18} />
-            <h3>To do (05)</h3>
+            <h3>To do ({tasks.length})</h3>
           </div>
         </section>
         <section
@@ -129,6 +129,7 @@ const TaskPage = () => {
           <div className="section-header">
             <MdFileDownloadDone size={20} />
             <h3>Done </h3>
+            <button className="new-task">8 new</button>
           </div>
         </section>
       </div>

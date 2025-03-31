@@ -4,10 +4,10 @@ import './configs/loadEnv.configs.js'
 import { logger as log } from './app/helpers/logger.helpers.js'
 import { connectDB } from './configs/db.configs.js'
 import app from './app/app.js'
+import { createServer } from 'http'
+import { initSocket } from './socket/connect.socket.js'
 
 const { PORT: port = 8000 } = process.env
-let server
-
 // Handle Uncaught Exceptions (Sync Errors)
 process.on('uncaughtException', (err) => {
   console.error(`💥 Uncaught Exception: ${err.message}`)
@@ -20,13 +20,18 @@ process.on('unhandledRejection', (reason, promise) => {
   process.exit(1)
 })
 
-
 const startServer = async () => {
   console.log('===  Server Startup Initiated... ===')
   try {
     // connect to db
     await connectDB()
-    server = app.listen(port, (err) => {
+    // Create HTTP server
+    const server = createServer(app)
+
+    // Initialize Socket.io
+    const io = initSocket(server)
+
+    server.listen(port, (err) => {
       if (err) {
         log.error(`Error ${err.message}`)
         process.exit(1)
