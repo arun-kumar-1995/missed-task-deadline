@@ -13,16 +13,14 @@ const schema = new Schema(
       trim: true,
       lowercase: true,
     },
-    assignedTo: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: 'User',
-        required: true,
-      },
-    ],
+    assignedTo: {
+      type: Schema.Types.ObjectId,
+      ref: 'User',
+      required: true,
+    },
     status: {
       type: String,
-      enum: ['To-Do', 'In-Progress', 'Completed'],
+      enum: ['To-Do', 'In-Progress', 'Completed', 'Missed'],
       default: 'To-Do',
     },
     deadline: {

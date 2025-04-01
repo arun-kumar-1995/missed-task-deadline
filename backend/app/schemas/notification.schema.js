@@ -1,23 +1,22 @@
 import { Schema, model } from 'mongoose'
 const schema = new Schema(
   {
-    user: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'User',
-      required: true,
-    },
     message: {
       type: String,
       required: true,
       trim: true,
     },
-    task: {
-      type: mongoose.Schema.Types.ObjectId,
+    priority: {
+      type: String,
+      enum: ['Low', 'Medium', 'High'],
+      default: 'Medium',
+    },
+    taskId: {
+      type: Schema.Types.ObjectId,
       ref: 'Task',
     },
-    isRead: {
-      type: Boolean,
-      default: false,
+    deadline: {
+      type: Date,
     },
   },
   { timestamps: true }

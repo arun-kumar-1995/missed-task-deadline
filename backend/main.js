@@ -6,6 +6,7 @@ import { connectDB } from './configs/db.configs.js'
 import app from './app/app.js'
 import { createServer } from 'http'
 import { initSocket } from './socket/connect.socket.js'
+import { taskDeadlineScheduler } from './app/services/scheduler.services.js'
 
 const { PORT: port = 8000 } = process.env
 // Handle Uncaught Exceptions (Sync Errors)
@@ -38,6 +39,7 @@ const startServer = async () => {
       }
       log.warn(`[Server started]:\n http://localhost:${port}`)
     })
+    taskDeadlineScheduler(io)
   } catch (err) {
     log.error('Failed to start server', err.message)
     process.exit(1)

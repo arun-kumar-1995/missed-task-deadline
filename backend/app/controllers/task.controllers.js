@@ -6,21 +6,38 @@ import { HttpStatus } from '../constants/httpStatus.constants.js'
 import { redisClient } from '../../configs/redis.configs.js'
 
 export const createTask = CatchAsyncError(async (request, response, next) => {
-  const { title, description, assignedTo, status, deadline, priority } =
-    request.body
+  const {
+    title,
+    description,
+    assignedTo,
+    status,
+    deadline,
+    priority,
+    expireTime,
+  } = request.body
 
-  validate(request.body, { title, assignedTo, deadline })
+  validate(request.body, { title, description, status, priority, deadline })
+  console.log('--Expire time from client in second', expireTime)
+  const userId = request.userId
+  const task = await TaskService.createNewTask({
+    ...request.body,
+    assignedTo: userId,
+  })
 
-  const task = await TaskService.createNewTask(request.body)
   // Update Redis Task Count
-  await redisClient.HINCRBY('task_counts', status, 1)
+  await redisClient.HINCRBY(`user:${userId}:task_counts`, status, 1)
 
   // Update unread count per user
   const users = await redisClient.SMEMBERS('unread_users')
 
   for (const userId of users) {
-    await redisClient.HINCRBY(`unread_counts:${userId}`, status, 1)
+    await redisClient.HINCRBY(`user:${userId}:unread_counts`, status, 1)
   }
+
+  await redisClient.zAdd(`user:deadline_tasks`, [
+    { value: task._id.toString(), score: expireTime },
+  ])
+
   // Emit Event to Clients
   request.io.emit('task_created', { task })
 
@@ -31,7 +48,7 @@ export const getAllTasks = CatchAsyncError(async (request, response, next) => {
   const { status = 'To-Do' } = request.query
   const tasks = await TaskService.getAllTasks(status)
   // Register the user for unread tracking
-  await redisClient.SADD('unread_users', String(request.userId))
+  await redisClient.SADD('unread_users', request.userId.toString())
 
   return APIResponse(response, HttpStatus.SUCCESS, 'Here is list of tasks', {
     tasks,
@@ -53,11 +70,10 @@ export const deleteTask = CatchAsyncError(async (request, response, next) => {
 
 export const resetTasks = CatchAsyncError(async (request, response, next) => {
   const { status, userId } = request.body
-  console.log(status, userId)
-  await redisClient.HSET(`unread_counts:${userId}`, status, 0)
+  await redisClient.HSET(`user:${userId}:unread_counts`, status, 0)
 
   request.io.emit('update_unread_counts', {
-    ...(await redisClient.HGETALL(`unread_counts:${userId}`)),
+    ...(await redisClient.HGETALL(`user:${userId}:unread_counts`)),
   })
 
   return APIResponse(response, HttpStatus.SUCCESS, 'Task read updated')
