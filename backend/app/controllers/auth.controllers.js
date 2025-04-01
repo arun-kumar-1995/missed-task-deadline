@@ -18,9 +18,9 @@ import { SendToken } from '../shared/sendToken.shared.js'
  */
 
 export const register = CatchAsyncError(async (request, response, next) => {
-  const { name, email, password, role } = request.body
+  const { name, email, password } = request.body
   // validate income request
-  validate(request.body, { email, name, password, role })
+  validate(request.body, { email, name, password })
 
   // UserService
   const user = await UserService.register(request.body)
